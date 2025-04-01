@@ -3,36 +3,35 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import FirstHeroSection from "./component/FirstHeroSection";
 
-describe("testing", () => {
-  const mockProps = {
-    firstSectionInfo: {
-      imageUrl: "/test-image.jpg",
-      imageUrlStyle: "custom-style",
-      header: "Test Header",
-      description: "This is a test description.",
-    },
+describe("FirstHeroSection Component", () => {
+  const mockData = {
+    imageUrl: "test-image.jpg",
+    imageUrlStyle: "test-image-class",
+    header: "Test Header",
+    description: "This is a test description",
   };
-  test("renders component with provided props", () => {
-    render(<FirstHeroSection {...mockProps} />);
 
-    // Check if image renders correctly
-    const image = screen.getByRole("img");
-    expect(image).toHaveAttribute("src", mockProps.firstSectionInfo.imageUrl);
-    expect(image).toHaveClass(mockProps.firstSectionInfo.imageUrlStyle);
+  test("renders the image with correct src and class", () => {
+    render(<FirstHeroSection firstSectionInfo={mockData} />);
+    const image = screen.getByAltText(""); // Fix: Use getByAltText instead
 
-    // Check if header is rendered
-    expect(
-      screen.getByText(mockProps.firstSectionInfo.header)
-    ).toBeInTheDocument();
+    expect(image).toHaveAttribute("src", mockData.imageUrl);
+    expect(image).toHaveClass(mockData.imageUrlStyle);
+  });
 
-    // Check if description is rendered
-    expect(
-      screen.getByText(mockProps.firstSectionInfo.description)
-    ).toBeInTheDocument();
+  test("renders the correct header and description", () => {
+    render(<FirstHeroSection firstSectionInfo={mockData} />);
+    expect(screen.getByText(mockData.header)).toBeInTheDocument();
+    expect(screen.getByText(mockData.description)).toBeInTheDocument();
+  });
 
-    // Check if buttons are present
-    expect(screen.getByText("Download for iOS")).toBeInTheDocument();
-    expect(screen.getByText("Download for Mac")).toBeInTheDocument();
+  test("renders download buttons with correct text", () => {
+    render(<FirstHeroSection firstSectionInfo={mockData} />);
+
+    const iosButton = screen.getByText(/Download for iOS/i);
+    const macButton = screen.getByText(/Download for Mac/i);
+
+    expect(iosButton).toBeInTheDocument();
+    expect(macButton).toBeInTheDocument();
   });
 });
-
